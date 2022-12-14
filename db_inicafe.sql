@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 30, 2022 at 09:57 PM
--- Server version: 10.4.21-MariaDB
--- PHP Version: 8.0.15
+-- Generation Time: Dec 14, 2022 at 11:15 PM
+-- Server version: 10.4.27-MariaDB
+-- PHP Version: 7.4.33
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -35,7 +35,7 @@ CREATE TABLE `tb_daftar_menu` (
   `kategori` int(10) DEFAULT NULL,
   `harga` varchar(15) DEFAULT NULL,
   `stok` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tb_daftar_menu`
@@ -59,7 +59,7 @@ CREATE TABLE `tb_kategori_menu` (
   `id_kat_menu` int(10) NOT NULL,
   `jenis_menu` int(10) DEFAULT NULL,
   `kategori_menu` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tb_kategori_menu`
@@ -70,6 +70,61 @@ INSERT INTO `tb_kategori_menu` (`id_kat_menu`, `jenis_menu`, `kategori_menu`) VA
 (2, 1, 'Snack'),
 (3, 2, 'Jus'),
 (4, 2, 'Kopi');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tb_list_order`
+--
+
+CREATE TABLE `tb_list_order` (
+  `id_list_order` int(10) NOT NULL,
+  `menu` int(10) NOT NULL,
+  `order` int(10) NOT NULL,
+  `jumlah` int(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tb_list_order`
+--
+
+INSERT INTO `tb_list_order` (`id_list_order`, `menu`, `order`, `jumlah`) VALUES
+(1, 20, 2, 1),
+(2, 20, 2, 3),
+(3, 2, 4, 2),
+(4, 19, 20, 2),
+(5, 20, 20, 2),
+(6, 20, 3, 4),
+(7, 3, 19, 3),
+(8, 3, 21, 5);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tb_order`
+--
+
+CREATE TABLE `tb_order` (
+  `id_order` int(10) NOT NULL,
+  `kode_order` varchar(200) DEFAULT NULL,
+  `pelanggan` varchar(200) DEFAULT NULL,
+  `pelayan` int(11) DEFAULT NULL,
+  `status` varchar(15) DEFAULT NULL,
+  `meja` int(11) NOT NULL,
+  `waktu_order` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tb_order`
+--
+
+INSERT INTO `tb_order` (`id_order`, `kode_order`, `pelanggan`, `pelayan`, `status`, `meja`, `waktu_order`) VALUES
+(2, '232323', 'Mustofa', 1, '1', 1, '2022-12-14 21:12:31'),
+(3, '323232', 'Adul', 1, '1', 2, '2022-12-14 21:12:33'),
+(4, '234234', 'Rahmet', 2, '2', 5, '2022-12-14 21:12:36'),
+(19, '23423424', 'Uswatun', 1, '3', 3, '2022-12-14 21:12:39'),
+(20, '2342342', 'Jessica', 2, '1', 9, '2022-12-14 21:12:42'),
+(21, '24234234', 'Jarwo', 2, '2', 4, '2022-12-14 21:12:47');
 
 -- --------------------------------------------------------
 
@@ -85,7 +140,7 @@ CREATE TABLE `tb_user` (
   `nama` varchar(200) DEFAULT NULL,
   `nohp` varchar(15) DEFAULT NULL,
   `alamat` varchar(300) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tb_user`
@@ -117,6 +172,21 @@ ALTER TABLE `tb_kategori_menu`
   ADD PRIMARY KEY (`id_kat_menu`);
 
 --
+-- Indexes for table `tb_list_order`
+--
+ALTER TABLE `tb_list_order`
+  ADD PRIMARY KEY (`id_list_order`),
+  ADD KEY `FK_tb_list_order_tb_daftar_menu` (`menu`),
+  ADD KEY `FK_tb_list_order_tb_order` (`order`);
+
+--
+-- Indexes for table `tb_order`
+--
+ALTER TABLE `tb_order`
+  ADD PRIMARY KEY (`id_order`),
+  ADD KEY `FK_tb_order_tb_user` (`pelayan`);
+
+--
 -- Indexes for table `tb_user`
 --
 ALTER TABLE `tb_user`
@@ -139,6 +209,18 @@ ALTER TABLE `tb_kategori_menu`
   MODIFY `id_kat_menu` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT for table `tb_list_order`
+--
+ALTER TABLE `tb_list_order`
+  MODIFY `id_list_order` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `tb_order`
+--
+ALTER TABLE `tb_order`
+  MODIFY `id_order` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+
+--
 -- AUTO_INCREMENT for table `tb_user`
 --
 ALTER TABLE `tb_user`
@@ -153,6 +235,19 @@ ALTER TABLE `tb_user`
 --
 ALTER TABLE `tb_daftar_menu`
   ADD CONSTRAINT `FK_tb_daftar_menu_tb_kategori_menu` FOREIGN KEY (`kategori`) REFERENCES `tb_kategori_menu` (`id_kat_menu`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `tb_list_order`
+--
+ALTER TABLE `tb_list_order`
+  ADD CONSTRAINT `FK_tb_list_order_tb_daftar_menu` FOREIGN KEY (`menu`) REFERENCES `tb_daftar_menu` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `FK_tb_list_order_tb_order` FOREIGN KEY (`order`) REFERENCES `tb_order` (`id_order`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `tb_order`
+--
+ALTER TABLE `tb_order`
+  ADD CONSTRAINT `FK_tb_order_tb_user` FOREIGN KEY (`pelayan`) REFERENCES `tb_user` (`id`) ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
