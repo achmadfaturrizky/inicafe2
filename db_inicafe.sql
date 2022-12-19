@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Dec 14, 2022 at 11:15 PM
+-- Generation Time: Dec 19, 2022 at 11:06 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 7.4.33
 
@@ -78,9 +78,9 @@ INSERT INTO `tb_kategori_menu` (`id_kat_menu`, `jenis_menu`, `kategori_menu`) VA
 --
 
 CREATE TABLE `tb_list_order` (
-  `id_list_order` int(10) NOT NULL,
+  `id_list_order` int(20) NOT NULL,
   `menu` int(10) NOT NULL,
-  `order` int(10) NOT NULL,
+  `order` bigint(20) NOT NULL,
   `jumlah` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -89,14 +89,7 @@ CREATE TABLE `tb_list_order` (
 --
 
 INSERT INTO `tb_list_order` (`id_list_order`, `menu`, `order`, `jumlah`) VALUES
-(1, 20, 2, 1),
-(2, 20, 2, 3),
-(3, 2, 4, 2),
-(4, 19, 20, 2),
-(5, 20, 20, 2),
-(6, 20, 3, 4),
-(7, 3, 19, 3),
-(8, 3, 21, 5);
+(1, 20, 2212191656101, 2);
 
 -- --------------------------------------------------------
 
@@ -105,26 +98,23 @@ INSERT INTO `tb_list_order` (`id_list_order`, `menu`, `order`, `jumlah`) VALUES
 --
 
 CREATE TABLE `tb_order` (
-  `id_order` int(10) NOT NULL,
-  `kode_order` varchar(200) DEFAULT NULL,
+  `id_order` bigint(20) NOT NULL,
   `pelanggan` varchar(200) DEFAULT NULL,
   `pelayan` int(11) DEFAULT NULL,
   `status` varchar(15) DEFAULT NULL,
   `meja` int(11) NOT NULL,
-  `waktu_order` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `waktu_order` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `catatan` varchar(500) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tb_order`
 --
 
-INSERT INTO `tb_order` (`id_order`, `kode_order`, `pelanggan`, `pelayan`, `status`, `meja`, `waktu_order`) VALUES
-(2, '232323', 'Mustofa', 1, '1', 1, '2022-12-14 21:12:31'),
-(3, '323232', 'Adul', 1, '1', 2, '2022-12-14 21:12:33'),
-(4, '234234', 'Rahmet', 2, '2', 5, '2022-12-14 21:12:36'),
-(19, '23423424', 'Uswatun', 1, '3', 3, '2022-12-14 21:12:39'),
-(20, '2342342', 'Jessica', 2, '1', 9, '2022-12-14 21:12:42'),
-(21, '24234234', 'Jarwo', 2, '2', 4, '2022-12-14 21:12:47');
+INSERT INTO `tb_order` (`id_order`, `pelanggan`, `pelayan`, `status`, `meja`, `waktu_order`, `catatan`) VALUES
+(13123, 'asdasd', 21, NULL, 2, '2022-12-19 09:47:07', 'asdasd'),
+(2212191649698, 'asdasd', 21, NULL, 2, '2022-12-19 09:49:09', 'asdasd'),
+(2212191656101, 'asdasd', 21, NULL, 2, '2022-12-19 09:56:48', 'adasdasd');
 
 -- --------------------------------------------------------
 
@@ -177,7 +167,7 @@ ALTER TABLE `tb_kategori_menu`
 ALTER TABLE `tb_list_order`
   ADD PRIMARY KEY (`id_list_order`),
   ADD KEY `FK_tb_list_order_tb_daftar_menu` (`menu`),
-  ADD KEY `FK_tb_list_order_tb_order` (`order`);
+  ADD KEY `FK_order` (`order`);
 
 --
 -- Indexes for table `tb_order`
@@ -212,13 +202,7 @@ ALTER TABLE `tb_kategori_menu`
 -- AUTO_INCREMENT for table `tb_list_order`
 --
 ALTER TABLE `tb_list_order`
-  MODIFY `id_list_order` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
-
---
--- AUTO_INCREMENT for table `tb_order`
---
-ALTER TABLE `tb_order`
-  MODIFY `id_order` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id_list_order` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `tb_user`
@@ -240,8 +224,10 @@ ALTER TABLE `tb_daftar_menu`
 -- Constraints for table `tb_list_order`
 --
 ALTER TABLE `tb_list_order`
+  ADD CONSTRAINT `FK_order` FOREIGN KEY (`order`) REFERENCES `tb_order` (`id_order`) ON UPDATE CASCADE,
   ADD CONSTRAINT `FK_tb_list_order_tb_daftar_menu` FOREIGN KEY (`menu`) REFERENCES `tb_daftar_menu` (`id`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `FK_tb_list_order_tb_order` FOREIGN KEY (`order`) REFERENCES `tb_order` (`id_order`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `FK_tb_list_order_tb_order` FOREIGN KEY (`order`) REFERENCES `tb_order` (`id_order`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `tb_list_order_ibfk_1` FOREIGN KEY (`order`) REFERENCES `tb_order` (`id_order`) ON UPDATE CASCADE;
 
 --
 -- Constraints for table `tb_order`
