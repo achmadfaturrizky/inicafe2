@@ -4,11 +4,16 @@ $query = mysqli_query($conn, "SELECT *, SUM(harga*jumlah) AS harganya FROM tb_li
 LEFT JOIN tb_order ON tb_order.id_order = tb_list_order.order
 LEFT JOIN tb_daftar_menu on tb_daftar_menu.id = tb_list_order.menu
 GROUP BY id_list_order HAVING tb_list_order.order = $_GET[order]");
+
+$kode = $_GET['order'];
+$meja = $_GET['meja'];
+$pelanggan = $_GET['pelanggan'];
+
 while ($record = mysqli_fetch_array($query)) {
     $result[] = $record;
-    $kode = $record['kode_order'];
-    $meja = $record['meja'];
-    $pelanggan = $record['pelanggan'];
+    // $kode = $record['id_order'];
+    // $meja = $record['meja'];
+    // $pelanggan = $record['pelanggan'];
 }
 
 $select_kat_menu = mysqli_query($conn, "SELECT id_kat_menu, kategori_menu FROM tb_kategori_menu");
@@ -41,13 +46,13 @@ $select_kat_menu = mysqli_query($conn, "SELECT id_kat_menu, kategori_menu FROM t
                 </div>
             </div>
 
-            <!-- Modal Tambah menu baru-->
-            <div class="modal fade" id="ModalTambahUser" tabindex="-1" aria-labelledby="exampleModalLabel"
+            <!-- Modal Tambah item baru-->
+            <div class="modal fade" id="tambahItem" tabindex="-1" aria-labelledby="exampleModalLabel"
                 aria-hidden="true">
                 <div class="modal-dialog modal-xl modal-fullscreen-md-down">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Menu Makanan dan Minuman</h1>
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Item</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -117,7 +122,7 @@ $select_kat_menu = mysqli_query($conn, "SELECT id_kat_menu, kategori_menu FROM t
                 </div>
             </div>
 
-            <!-- Akhir Modal Tambah Menu baru-->
+            <!-- Akhir Modal Item-->
             <?php
             if (empty($result)) {
                 echo "Data Menu Makanan atau Minuman tidak ada";
@@ -407,19 +412,18 @@ $select_kat_menu = mysqli_query($conn, "SELECT id_kat_menu, kategori_menu FROM t
                         </tr>
                     </tbody>
                 </table>
-                <div>
-                    <button class="btn btn-success">
-                        <i class="bi bi-plus-circle"></i> Item
-                    </button>
-                    <button class="btn btn-primary">
-                        <i class="bi bi-cash-coin"></i>
-                        Bayar
-                    </button>
-                </div>
             </div>
             <?php
             }
             ?>
+            <div>
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#tambahItem"> <i
+                        class="bi bi-plus-circle"></i>
+                    Item</button>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bayar"> <i
+                        class="bi bi-cash-coin"></i>
+                    Bayar</button>
+            </div>
         </div>
     </div>
 </div>
